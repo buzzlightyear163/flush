@@ -574,7 +574,8 @@ function grade(c) {
   ck.push(Object.assign({ name: "buyers now", th: R.wallets + "+ wallets" }, f));
   const miss = ck.filter(x => !x.ok).length;
   const g = !c.early ? "SCAN" : m.sn > R.loaded ? "LOADED" : miss === 0 ? "CLEAN" : miss === 1 ? "DRAINING" : "LOADED";
-  if (g === "CLEAN" && c.grade !== "CLEAN") { c.cleanAt = now(); if (!c.everClean && visible(c)) { c.everClean = true; logSignal(c, m); } }
+  if (g === "DRAINING" || g === "LOADED") c.wasDirty = true;
+  if (g === "CLEAN" && c.grade !== "CLEAN") { c.cleanAt = now(); if (!c.everClean && c.wasDirty && visible(c)) { c.everClean = true; logSignal(c, m); } }
   c.grade = g; c.checks = ck; c.m = m; c.pass = 6 - miss;
   return c;
 }
@@ -834,7 +835,7 @@ function row(c) {
     <span class="c-hold n">${c.holders ?? c.own}</span>
     <span class="c-mcap n mut">${usd(mc)}</span>
     <span class="c-nums"><span class="${cls(m.sn, CONFIG.R.snipers)}">sn ${pct(m.sn)}</span><span class="${cls(m.bu, CONFIG.R.bundles)}">bu ${pct(m.bu)}</span><span class="${cls(m.dev, CONFIG.R.dev)}">dev ${pct(m.dev)}</span><span>${age}</span></span>
-    <span class="c-gr"><i class="gr ${g}">${g === "CLEARING" ? "clean in " + Math.ceil((CONFIG.earlySeconds * 1000 - (now() - c.cleanAt)) / 1000) + "s" : g === "SCAN" ? "scanning" : g}</i></span>
+    <span class="c-gr" title="${esc(c.checks.filter(x => !x.ok).map(x => "✗ " + x.name).join("\n") || "all six checks pass")}"><i class="gr ${g}">${g === "CLEARING" ? "clean in " + Math.ceil((CONFIG.earlySeconds * 1000 - (now() - c.cleanAt)) / 1000) + "s" : g === "SCAN" ? "scanning" : g}</i></span>
   </div>${openMint === c.mint ? `<div class="drawer" id="drawer">${drawer(c)}</div>` : ""}`;
 }
 function drawer(c) {
