@@ -329,6 +329,39 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
   .bhead h2{margin-top:8px}
 }
 .c-nums{display:none}
+/* check any coin */
+.inbar{display:flex;border:1.5px solid var(--line);background:var(--paper);height:56px;max-width:600px;box-shadow:6px 6px 0 var(--shadow);margin-top:30px;transition:border-color .15s}
+.inbar:focus-within{border-color:var(--accent)}
+.inbar input{flex:1;background:none;border:0;padding:0 18px;font:14px var(--mono);color:var(--ink);outline:none;min-width:0}
+.inbar input::placeholder{color:var(--faint)}
+.inbar button{border:0;background:var(--accent);color:var(--bg);font:600 13.5px var(--mono);padding:0 24px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:var(--glow)}
+.hint{font-size:12px;color:var(--muted);min-height:1.6em;margin-top:10px} .hint.err{color:var(--red)}
+.hero3 .ctas{margin-top:16px}
+.pin-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:0 .45em;margin-left:6px;font-weight:400;vertical-align:1px}
+.unpin{background:none;border:0;color:var(--faint);font:inherit;cursor:pointer;margin-left:4px;padding:0 4px} .unpin:hover{color:var(--red)}
+/* signals strip + alert toggles */
+.sigs{display:flex;align-items:center;gap:18px;padding:9px 16px;border-bottom:1px solid var(--hair);font-size:11.5px;color:var(--faint);overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.sigs::-webkit-scrollbar{display:none}
+.sigs b{color:var(--muted);font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px}
+.sigs button{background:none;border:0;font:inherit;color:var(--ink);cursor:pointer;padding:0} .sigs button span{color:var(--accent);font-weight:700} .sigs button:hover{color:var(--accent)}
+.tgl{background:none;border:1px solid var(--hair);color:var(--muted);font:11px var(--mono);padding:3px 9px;cursor:pointer} .tgl.on{border-color:var(--accent);color:var(--accent)}
+/* toasts */
+#toasts{position:fixed;left:16px;bottom:16px;z-index:60;display:flex;flex-direction:column;gap:10px;width:min(390px,calc(100vw - 32px))}
+.toast{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--paper);border:1.5px solid var(--accent);box-shadow:6px 6px 0 var(--shadow),var(--glow);padding:12px 14px;font-size:12.5px;animation:tin .3s ease}
+.toast .gr{width:76px} .toast small{color:var(--muted);font-size:11px} .toast b{font-weight:700}
+.toast button{background:none;border:1px solid var(--line);color:var(--ink);font:12px var(--mono);padding:5px 10px;cursor:pointer} .toast button:hover{border-color:var(--accent);color:var(--accent)}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}}
+/* flush chart */
+.dchart{display:block;width:100%;height:150px;margin:2px 0 10px}
+.legend2{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:20px} .legend2 i{display:inline-block;width:10px;height:3px;margin-right:6px;vertical-align:middle}
+/* share modal */
+.modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal[hidden]{display:none!important}
+.modal .box{background:var(--paper);border:1.5px solid var(--line);box-shadow:10px 10px 0 var(--shadow);width:min(880px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:20px}
+.modal .mh{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:12px;color:var(--muted)} .modal .mh button{margin-left:auto;background:none;border:0;color:var(--muted);font:20px var(--mono);cursor:pointer;line-height:1}
+.modal canvas{display:block;width:100%;height:auto;border:1px solid var(--hair)}
+.modal .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+@media (max-width:860px){ .inbar{height:52px} .inbar button{padding:0 16px} .toast{grid-template-columns:1fr auto} .toast .gr{display:none} }
 </style>
 </head>
 <body>
@@ -347,7 +380,9 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
       <div class="prompt"><span>anon@flushed ~ %</span> <span class="cmd" id="typed"></span><span class="cur"></span></div>
       <h1>the snipers are out.<br>now it can <b>run.</b></h1>
       <p class="lede">Almost every new coin has snipers and bundles from its first blocks sitting on a big chunk of supply. FLUSHED tracks how much they still hold, live, and only buys once they're out.</p>
-      <div class="ctas"><a class="btn pri" href="#board">open the board ↓</a><a class="btn" href="#how">how it works</a></div>
+      <form class="inbar" id="chkForm"><input id="chkIn" placeholder="paste any CA to check its snipers" autocomplete="off" spellcheck="false" aria-label="contract address"><button type="submit">▶ <span>check</span></button></form>
+      <div class="hint" id="chkHint">any pump.fun or LaunchLab coin, not just the ones on the board.</div>
+      <div class="ctas"><a class="btn" href="#board">open the board ↓</a><a class="btn" href="#how">how it works</a></div>
       <div class="ca"><span>ca</span><code id="ca">posted here and on X at launch</code><button class="chip" id="copy" hidden>copy</button></div>
       <div class="tally">
         <div><b class="num" id="tWatch">0</b>coins watched</div>
@@ -365,7 +400,8 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
     <div class="filters" id="filters"><button class="chip on" data-f="all">all<b id="fAll">0</b></button><button class="chip" data-f="CLEAN">clean<b id="fC">0</b></button><button class="chip" data-f="DRAINING">draining<b id="fD">0</b></button><button class="chip" data-f="LOADED">loaded<b id="fL">0</b></button></div>
   </div>
   <div class="board">
-    <div class="bar"><span class="src"><i class="dot" id="dPump"></i>pump.fun · every trade from block 0</span><span class="src"><i class="dot" id="dLab"></i>launchlab · polled</span><span class="src"><i class="dot" id="dJup"></i>holders + flow</span><span class="r" id="bUpd">% of supply · click a coin</span></div>
+    <div class="bar"><span class="src"><i class="dot" id="dPump"></i>pump.fun · every trade from block 0</span><span class="src"><i class="dot" id="dLab"></i>launchlab · polled</span><span class="src"><i class="dot" id="dJup"></i>holders + flow</span><span class="r" id="bUpd">% of supply · click a coin</span><button class="tgl" id="tSound">sound off</button><button class="tgl" id="tNotify">alerts off</button></div>
+    <div class="sigs" id="sigs"></div>
     <div class="brow h"><span>coin</span><span class="c-age n">age</span><span class="c-sn n">snipers</span><span class="c-bu n">bundles</span><span class="c-dev n">dev</span><span class="c-mt">flushed</span><span class="c-hold n">holders</span><span class="c-mcap n">mcap</span><span class="c-gr" style="text-align:center">grade</span></div>
     <div id="rows"><div class="bempty">connecting to pump.fun and launchlab…<br><span class="acc">flushed board --live</span></div></div>
     <div class="bfoot" id="bfoot"></div>
@@ -480,6 +516,8 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
     <details><summary>what counts as a sniper, and what's a bundle?</summary><p>A sniper is any wallet whose first buy lands in block 0, 1 or 2. A bundle is a group of 3+ wallets buying in the same block in the first few blocks, or early wallets funded from the same address within a few blocks of each other. The dev wallet is counted on its own.</p></details>
     <details><summary>can it miss something?</summary><p>Yes. A sniper that moves its bag to a fresh wallet instead of selling shows up on the next holder snapshot, not instantly. Wallets outside the top 100 holders count as zero. "verify bags" in a coin's drawer re-checks every tagged wallet against the chain.</p></details>
     <details><summary>how do holders get signals early?</summary><p>Connect a wallet that holds $FLUSHED. Every CLEAN shows up for you the moment it happens. Everyone else sees "clearing…" for 20 seconds first.</p></details>
+    <details><summary>can I check a coin that isn't on the board?</summary><p>Yes. Paste its CA at the top of the page. FLUSHED reads its first blocks back, tags the snipers and bundles, checks what they still hold and runs the six checks. Every report has its own link and a share card.</p></details>
+    <details><summary>how do the alerts work?</summary><p>Every coin that turns CLEAN while the page is open shows up in the signals row and as a pop-up. Turn on sound or alerts on the board to hear it or get a notification with the tab in the background. Holders of $FLUSHED get them 20 seconds earlier.</p></details>
     <details><summary>do I need a wallet to use the board?</summary><p>No. The board, the sniper maps and the log are free and need nothing. Never paste a seed phrase or private key anywhere.</p></details>
     <details><summary>will FLUSHED DM me?</summary><p>Never. Anyone who does is not us.</p></details>
   </div>
@@ -490,6 +528,13 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
   <div class="ctas" style="margin-top:40px"><a class="btn pri" href="#board">open the board</a></div>
   <div class="fine"><span>$FLUSHED · solana</span><span>not financial advice</span><span id="cafoot"></span></div>
 </div></footer>
+<div id="toasts" aria-live="polite"></div>
+<div class="modal" id="shareM" hidden><div class="box">
+  <div class="mh"><span class="k">share card</span><span id="shareSym"></span><button id="shareX" aria-label="close">×</button></div>
+  <canvas id="shareCv" width="1600" height="900"></canvas>
+  <div class="acts"><button class="btn pri" id="sCopy">copy image</button><button class="btn" id="sDl">download png</button><a class="btn" id="sPost" target="_blank" rel="noopener">post on X</a><button class="btn" id="sLink">copy link</button></div>
+  <div class="note" id="sNote">Copy the image and paste it into your post. The link opens this coin's flush report.</div>
+</div></div>
 <div id="dbg" hidden></div>
 
 <script>
@@ -748,6 +793,7 @@ if (typeof module !== "undefined") module.exports = TK;
 const CONFIG = {
   ca: "",                                   // $FLUSHED mint. empty = "posted here and on X at launch", holder head start off
   x: "https://x.com/FlushedEngine",
+  site: "",                                 // the domain on share cards, e.g. "flushedengine.fun". empty = the address the site is on
   engine: "",                               // the engine's public wallet. empty = "posted here at launch"
   ticker: "$FLUSHED", object: "drain", theme: document.documentElement.dataset.theme,
   earlySeconds: 20,                         // holders see CLEAN this many seconds before everyone else
@@ -801,9 +847,9 @@ async function jfetch(url, opt) {
 }
 const JUP = {
   gems: body => jq(() => jfetch(CONFIG.jup + "/pools/gems", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })),
-  assets: mints => jq(() => jfetch(CONFIG.jup + "/assets/search?query=" + mints.join(","))),
-  txs: (mint, ts, off) => jq(() => jfetch(CONFIG.jup + "/txs/" + mint + (ts ? "?offsetTs=" + encodeURIComponent(ts) + (off ? "&offset=" + off : "") : ""))),
-  holders: mint => jq(() => jfetch(CONFIG.jup + "/holders/" + mint)),
+  assets: (mints, pri) => jq(() => jfetch(CONFIG.jup + "/assets/search?query=" + mints.join(",")), pri),
+  txs: (mint, ts, off, pri) => jq(() => jfetch(CONFIG.jup + "/txs/" + mint + (ts ? "?offsetTs=" + encodeURIComponent(ts) + (off ? "&offset=" + off : "") : "")), pri),
+  holders: (mint, pri) => jq(() => jfetch(CONFIG.jup + "/holders/" + mint), pri),
   holdings: wallet => jq(() => jfetch("https://lite-api.jup.ag/ultra/v1/holdings/" + wallet), true),
   holdingsBg: wallet => vq(() => jfetch("https://lite-api.jup.ag/ultra/v1/holdings/" + wallet)),
 };
@@ -963,7 +1009,9 @@ function grade(c) {
   const miss = ck.filter(x => !x.ok).length;
   const g = !c.early ? "SCAN" : m.sn > R.loaded ? "LOADED" : miss === 0 ? "CLEAN" : miss === 1 ? "DRAINING" : "LOADED";
   if (g === "DRAINING" || g === "LOADED") c.wasDirty = true;
-  if (g === "CLEAN" && c.grade !== "CLEAN") { c.cleanAt = now(); if (!c.everClean && c.wasDirty && visible(c)) { c.everClean = true; logSignal(c, m); } }
+  if (g === "CLEAN" && c.grade !== "CLEAN") { c.cleanAt = now(); if (!c.everClean && c.wasDirty && visible(c)) { c.everClean = true; logSignal(c, m); queueAlert(c); } }
+  if (c.early && now() - (c.sampleAt || 0) >= 5000) { c.sampleAt = now(); const sr = c.series || (c.series = []); sr.push([now(), m.bag, c.price, c.mode === "live" ? c.own : (c.holders ?? c.own), 0]);
+    if (sr.length > 900) c.series = sr.filter((q, i) => i === 0 || i % 2 === 0 || i > 450); }
   c.grade = g; c.checks = ck; c.m = m; c.pass = 6 - miss;
   return c;
 }
@@ -980,7 +1028,7 @@ function applyJup(c, B) {
   if (!c.sym && B.symbol) c.sym = String(B.symbol).replace(/^\$+/, "").slice(0, 12);
   if (!c.name && B.name) c.name = String(B.name).slice(0, 40);
   if (!c.dev && B.dev) c.dev = B.dev;
-  if (B.launchpad) c.src = B.launchpad === "pump.fun" ? "pump" : "lab";
+  if (B.launchpad) { c.src = B.launchpad === "pump.fun" ? "pump" : "lab"; c.lp = B.launchpad === "pump.fun" ? "pump" : /bonk/i.test(B.launchpad) ? "bonk" : /launchlab/i.test(B.launchpad) ? "lab" : String(B.launchpad).split(/[.\s-]/)[0].slice(0, 8).toLowerCase(); }
   if (B.createdAt && c.mode === "snap") c.created = Date.parse(B.createdAt) || c.created;
 }
 function watchCoin(c) {
@@ -1001,7 +1049,7 @@ async function earlyScan(c) {
     // live coins: newest page first, then back to block 0. coins we didn't see launch: start 5s after creation
     let ts = c.mode === "live" ? null : new Date((c.created || c.born) + 5000).toISOString(), off = null, all = [], full = false;
     for (let p = 0; p < 6; p++) {
-      const j = await JUP.txs(c.mint, ts, off), tx = j.txs || []; all.push(...tx);
+      const j = await JUP.txs(c.mint, ts, off, !!c.pinned), tx = j.txs || []; all.push(...tx);
       if (tx.length < 30) { full = true; break; }
       off = tx[tx.length - 1].actionId; ts = tx[tx.length - 1].timestamp;
     }
@@ -1016,7 +1064,8 @@ async function earlyScan(c) {
       const e = tr.filter(t => slotOf(t) <= c.createSlot + 2 && +t.usdPrice > 0).sort((a, b) => slotOf(b) - slotOf(a))[0];
       await snapshot(c);
       const m = metrics(c);
-      if (m.took > .5 && e) { c.flushAt = (c.created || c.born) + 3000; c.flushPrice = +e.usdPrice; c.flushEst = true; c.minPrice = c.price || null; }
+      if (m.took > .5 && e) { c.flushAt = (c.created || c.born) + 3000; c.flushPrice = +e.usdPrice; c.flushEst = true; c.minPrice = c.price || null;
+        c.series = [[(c.created || c.born) + 3000, m.took, c.flushPrice, null, 1]]; }
     }
     c.early = true; watchCoin(c); dirty = true;
   } catch (e) { if (++c.tries < 4) setTimeout(() => { c.scanning = false; earlyScan(c); }, 9000); return; }
@@ -1025,7 +1074,7 @@ async function earlyScan(c) {
 // current bags: Jupiter's top-100 holder list (also gives each wallet's funding address)
 async function snapshot(c) {
   try {
-    const j = await JUP.holders(c.mint), list = j.holders || [];
+    const j = await JUP.holders(c.mint, !!c.pinned), list = j.holders || [];
     const isPool = x => x.address === c.poolId || (x.holderTags || []).some(t => /curve|pool|amm|vault|launch|liquidity/i.test((t.id || "") + " " + (t.name || "")));
     const map = new Map(); let cutoff = Infinity;
     for (const x of list) { if (isPool(x)) continue; map.set(x.address, x); cutoff = Math.min(cutoff, +x.amount || 0); }
@@ -1101,14 +1150,15 @@ function snapLoop() {
   const due = [...COINS.values()].filter(c => c.early && !c.dead && visible(c) && now() - c.snapAt > 150000).sort((a, b) => a.snapAt - b.snapAt)[0];
   if (due) snapshot(due);
 }
-function visible(c) { return c.early && !c.dead && Math.max(c.holders || 0, c.own) >= 12; }
+function visible(c) { return c.early && !c.dead && (c.pinned || Math.max(c.holders || 0, c.own) >= 12); }
 function prune() {
   const t = now();
   for (const c of COINS.values()) {
+    if (c.pinned) continue;
     const idle = t - Math.max(c.last, c.born);
     if (!c.dead && ((c.early && idle > 12 * 60e3) || (!visible(c) && c.early && t - c.born > 6 * 60e3))) { c.dead = true; if (c.sub && c.src === "pump") RPC.unwatch(c.mint); }
   }
-  if (COINS.size > CONFIG.maxCoins) { const dead = [...COINS.values()].filter(c => c.dead && c.mint !== openMint).sort((a, b) => a.last - b.last);
+  if (COINS.size > CONFIG.maxCoins) { const dead = [...COINS.values()].filter(c => c.dead && !c.pinned && c.mint !== openMint).sort((a, b) => a.last - b.last);
     for (const c of dead.slice(0, COINS.size - CONFIG.maxCoins)) COINS.delete(c.mint); }
 }
 
@@ -1198,6 +1248,10 @@ function startPreview() {
     for (let k = 0; k < c.holders; k++) { const w = newW(addr()); w.held = rnd(1e5, 4e6); c.w.set(w.a, w); }
     c.flushAt = c.born + 20e3; c.flushPrice = c.price * rnd(.8, 1.3); c.flushOwn = Math.round(c.holders * rnd(.4, .9)); c.minPrice = c.flushPrice * (i < 4 ? rnd(.55, .95) : rnd(.3, .9));
     for (let k = 0; k < 60; k++) c.trades.push({ ts: now() - rnd(0, 300e3), buy: Math.random() < (i < 6 ? .62 : .45), w: addr() });
+    { let took = 0, bag = 0; for (const w of c.w.values()) if (w.tag === "sniper" || w.tag === "bundle") { took += Math.max(w.bought, w.held); bag += w.held; }
+      took = took / 1e9 * 100; bag = bag / 1e9 * 100; const N = 60, span = now() - c.born; let pr = c.flushPrice, h = Math.round(c.holders * .3); c.series = [];
+      for (let k = 0; k <= N; k++) { const f = k / N, t = c.born + span * f; pr *= rnd(.94, 1.07); h += Math.round(rnd(0, c.holders * .025));
+        c.series.push([t, took + (bag - took) * Math.min(1, f * 1.4) + rnd(-.2, .2) * (1 - f), k === N ? c.price : pr, Math.min(c.holders, h), 0]); } }
     c.last = now();
   });
   setInterval(() => { for (const c of COINS.values()) { const tg = [...c.w.values()].filter(w => (w.tag === "sniper" || w.tag === "bundle") && w.held > 0);
@@ -1214,7 +1268,7 @@ function row(c) {
   const flushedPct = m.took > .5 ? Math.round((1 - m.left) * 100) + "%" : "no bag";
   const cls = (v, lim) => v < lim ? "acc" : "red";
   return `<div class="brow${openMint === c.mint ? " open" : ""}" data-m="${c.mint}">
-    <span class="c-sym sym">$${esc(c.sym || short(c.mint))}<span class="stag">${c.src === "lab" ? "lab" : "pump"}</span></span>
+    <span class="c-sym sym">$${esc(c.sym || short(c.mint))}<span class="stag">${srcTag(c)}</span>${c.pinned ? `<span class="pin-tag">checked</span><button class="unpin" data-unpin="${c.mint}" title="take it off the board">×</button>` : ""}</span>
     <span class="c-age n mut">${age}</span>
     <span class="c-sn n ${cls(m.sn, CONFIG.R.snipers)}">${pct(m.sn)}</span>
     <span class="c-bu n ${cls(m.bu, CONFIG.R.bundles)}">${pct(m.bu)}</span>
@@ -1240,11 +1294,14 @@ function drawer(c) {
   return `<div>
       <div class="kh"><span class="k">flush meter</span><span class="r">${m.took > .5 ? `${pct(m.bag)} still held of the ${pct(m.took)} they took` : "no sniper or bundle bag"}</span></div>
       <canvas class="dmeter" id="dmeter"></canvas>
+      <div class="kh"><span class="k">flush chart</span><span class="r">${c.series && c.series[0] && c.series[0][4] ? "launch → now · faded = before you opened the page" : "since the page started watching"}</span></div>
+      <canvas class="dchart" id="dchart"></canvas>
+      <div class="legend2"><span><i style="background:var(--red)"></i>sniper + bundle bag</span><span><i style="background:var(--accent)"></i>price</span><span><i style="background:var(--muted)"></i>holders</span>${c.flushAt ? '<span><i style="background:var(--faint)"></i>flush start</span>' : ""}</div>
       <div class="nums"><div><div class="k">snipers</div><div class="v ${m.sn < CONFIG.R.snipers ? "acc" : "red"}">${pct(m.sn)}</div></div><div><div class="k">bundles</div><div class="v ${m.bu < CONFIG.R.bundles ? "acc" : "red"}">${pct(m.bu)}</div></div>
         <div><div class="k">dev</div><div class="v ${m.dev < CONFIG.R.dev ? "acc" : "red"}">${pct(m.dev)}</div></div><div><div class="k">holders</div><div class="v">${c.holders ?? c.own}</div></div></div>
       <div class="kh"><span class="k">sniper map · block 0–2 + bundles</span><span class="r">${tagged.length} wallet${tagged.length === 1 ? "" : "s"} · block 0 = slot ${c.createSlot ?? "—"}</span></div>
       <div class="smapw"><table class="smap"><thead><tr><th>wallet</th><th>tag</th><th>block</th><th>bought</th><th>sold</th><th>sold at</th><th>left</th></tr></thead><tbody>${rowsH}</tbody></table></div>
-      <div class="dlinks"><button data-verify="${c.mint}">${c.verifying ? "verifying bags…" : c.verifyAt ? "bags verified " + dur(now() - c.verifyAt) + " ago · again" : "verify bags on-chain"}</button><a href="${link}" target="_blank" rel="noopener">${c.src === "lab" ? "launchlab" : "pump.fun"} ↗</a><a href="https://dexscreener.com/solana/${c.mint}" target="_blank" rel="noopener">dexscreener ↗</a><a href="https://solscan.io/token/${c.mint}" target="_blank" rel="noopener">solscan ↗</a></div>
+      <div class="dlinks"><button data-share="${c.mint}" class="acc">share card ↗</button><button data-verify="${c.mint}">${c.verifying ? "verifying bags…" : c.verifyAt ? "bags verified " + dur(now() - c.verifyAt) + " ago · again" : "verify bags on-chain"}</button><a href="${link}" target="_blank" rel="noopener">${c.src === "lab" ? "launchlab" : "pump.fun"} ↗</a><a href="https://dexscreener.com/solana/${c.mint}" target="_blank" rel="noopener">dexscreener ↗</a><a href="https://solscan.io/token/${c.mint}" target="_blank" rel="noopener">solscan ↗</a></div>
       ${c.mode === "snap" ? `<div class="note">already running when you opened the page: first blocks read back, bags from a holder snapshot ${c.snapAt ? dur(now() - c.snapAt) + " ago" : ""}, every trade since then live.</div>` : c.partial ? `<div class="note">busy launch: the first blocks were read back in part.</div>` : ""}
     </div>
     <div>
@@ -1277,14 +1334,14 @@ function render() {
   const cnt = { CLEAN: 0, DRAINING: 0, LOADED: 0 }; vis.forEach(c => { const g = shown(c); if (g === "CLEARING" || g === "CLEAN") cnt.CLEAN++; else if (cnt[g] != null) cnt[g]++; });
   $("#fAll").textContent = vis.length; $("#fC").textContent = cnt.CLEAN; $("#fD").textContent = cnt.DRAINING; $("#fL").textContent = cnt.LOADED;
   const list = vis.filter(c => filter === "all" || shown(c) === filter || (filter === "CLEAN" && shown(c) === "CLEARING"))
-    .sort((a, b) => ORDER[shown(a)] - ORDER[shown(b)] || b.last - a.last).slice(0, 40);
+    .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || ORDER[shown(a)] - ORDER[shown(b)] || b.last - a.last).slice(0, 40);
   const box = $("#rows"), sm = $(".smapw"), st = sm ? sm.scrollTop : 0;
   if (!list.length) {
     const scanning = [...COINS.values()].filter(c => !c.dead && !c.early).length;
     box.innerHTML = `<div class="bempty">${vis.length ? "nothing under this filter right now." : scanning ? `reading the first blocks of ${scanning} coin${scanning > 1 ? "s" : ""}…` : "waiting for coins…"}<br><span class="acc">flushed board --live</span></div>`;
   } else box.innerHTML = list.map(row).join("");
   const sm2 = $(".smapw"); if (sm2) sm2.scrollTop = st;
-  const oc = openMint && COINS.get(openMint); if (oc) drawMeter(oc);
+  const oc = openMint && COINS.get(openMint); if (oc) { drawMeter(oc); drawChart(oc); }
   // header, tally, lamps
   const all = [...COINS.values()].filter(c => !c.dead);
   $("#tWatch").textContent = all.length; $("#tClean").textContent = cnt.CLEAN;
@@ -1307,7 +1364,7 @@ function renderLog() {
   const engM = new Set(ENG.trades.filter(t => t.buy).map(t => t.mint));
   $("#logT").innerHTML = items.length ? `<table class="tbl"><thead><tr><th>time</th><th>coin</th><th>at signal</th><th>snipers · bundles</th><th>since</th><th>result</th><th>engine</th></tr></thead><tbody>${items.slice(0, 40).map(e => {
       const x = e.pNow && e.p0 ? e.pNow / e.p0 : null;
-      return `<tr><td class="z">${hm(e.at)}</td><td><a href="#board" data-open="${e.mint}">$${esc(e.sym || short(e.mint))}</a> <span class="stag">${e.src}</span></td><td>${usd(e.mc0)}</td><td class="z">${pct(e.sn)} · ${pct(e.bu)}</td>
+      return `<tr><td class="z">${hm(e.at)}</td><td><a href="#board" data-open="${e.mint}">$${esc(e.sym || short(e.mint))}</a> <span class="stag">${e.src === "pump" ? "pump" : "lab"}</span></td><td>${usd(e.mc0)}</td><td class="z">${pct(e.sn)} · ${pct(e.bu)}</td>
       <td class="${x == null ? "z" : x >= 1 ? "win" : "stop"}">${x == null ? "—" : (x >= 1 ? "+" : "") + Math.round((x - 1) * 100) + "%"}</td>
       <td class="${e.st === "2x" ? "win" : e.st === "stop" ? "stop" : "z"}">${e.st === "2x" ? "hit 2x" : e.st === "stop" ? "stopped −" + R.stop + "%" : e.st}</td>
       <td class="z">${CONFIG.engine ? (engM.has(e.mint) ? '<span class="win">bought</span>' : "—") : "beta"}</td></tr>`; }).join("")}</tbody></table>`
@@ -1338,6 +1395,188 @@ function renderGate() {
   b.innerHTML = `<div class="k">holder head start</div><div class="st">Connect a wallet that holds $FLUSHED. It only reads your balance: no signing, no approvals, nothing sent.${GATE.msg ? `<br><span class="red">${esc(GATE.msg)}</span>` : ""}</div><button class="btn pri" id="conn">connect wallet</button> <a class="btn" id="buyGate" href="${CONFIG.ca ? "https://pump.fun/coin/" + CONFIG.ca : "#token"}" target="_blank" rel="noopener">buy $FLUSHED</a>`;
   $("#conn").onclick = connectWallet;
 }
+
+
+// ================= check any coin + links to a coin =================
+const srcTag = c => c.src === "pump" ? "pump" : c.lp || "lab";
+function setUrl(mint) { try { history.replaceState(null, "", mint ? "?c=" + mint : location.pathname); } catch {} }
+function openCoin(c, noScroll) {
+  openMint = c.mint; filter = "all"; $$("#filters .chip").forEach(x => x.classList.toggle("on", x.dataset.f === "all"));
+  setUrl(c.mint); dirty = true; holdRender = false; render();
+  if (!noScroll) setTimeout(() => { const r = $(".brow.open"); if (r) scrollTo({ top: r.getBoundingClientRect().top + scrollY - 76, behavior: reduce ? "auto" : "smooth" }); }, 60);
+}
+async function checkCoin(raw) {
+  const hint = $("#chkHint"), mint = (String(raw || "").match(/[1-9A-HJ-NP-Za-km-z]{32,44}/g) || [])[0];
+  hint.className = "hint";
+  if (!mint) { hint.textContent = "that doesn't look like a Solana contract address."; hint.className = "hint err"; return; }
+  if (PREVIEW) { hint.textContent = "preview mode is on: checking a coin needs live data."; hint.className = "hint err"; return; }
+  let c = COINS.get(mint);
+  if (c && c.early) { c.pinned = true; c.dead = false; c.last = now(); watchCoin(c); hint.textContent = ""; return openCoin(c); }
+  hint.textContent = "reading its first blocks…";
+  try {
+    const arr = await JUP.assets([mint], true), B = (arr || []).find(x => x.id === mint);
+    if (!B) { hint.textContent = "couldn't find that coin. is it a Solana token that has traded?"; hint.className = "hint err"; return; }
+    const created = Date.parse(B.createdAt || (B.firstPool && B.firstPool.createdAt)) || now();
+    c = coin(mint, { mode: "snap", pinned: true, dead: false, tries: 0, created, born: created });
+    applyJup(c, B); if (!B.launchpad) { c.src = "lab"; c.lp = "dex"; }
+    c.last = now(); dirty = true;
+    await earlyScan(c);
+    for (let i = 0; i < 40 && !c.early && !c.dead; i++) await new Promise(r => setTimeout(r, 500));
+    if (!c.early) { hint.textContent = "no trades found for that coin yet. try again in a minute."; hint.className = "hint err"; c.pinned = false; c.dead = true; return; }
+    hint.textContent = ""; openCoin(c);
+  } catch (e) { hint.textContent = "couldn't reach the data right now. try again in a few seconds."; hint.className = "hint err"; }
+}
+$("#chkForm").onsubmit = e => { e.preventDefault(); checkCoin($("#chkIn").value); };
+
+// ================= flush chart: the bag sinks, price and holders hold =================
+function plotChart(x, X, Y, W, H, c, k) {
+  k = k || 1; const s = (c.series || []).filter(q => q[1] != null), F = (n, w) => (w || 400) + " " + Math.round(n * k) + "px 'JetBrains Mono', monospace";
+  x.save(); x.translate(X, Y); x.textBaseline = "alphabetic";
+  x.fillStyle = T.line; x.fillRect(0, H - 1, W, 1);
+  if (s.length < 2) { x.fillStyle = T.muted; x.font = F(11); x.fillText("the chart fills in while the page is open", 0, H / 2); x.restore(); return; }
+  const t0 = s[0][0], t1 = Math.max(now(), s[s.length - 1][0]), tx = t => (t - t0) / Math.max(1, t1 - t0) * W;
+  const top = 16 * k, ih = H - top - 2;
+  const bmax = Math.max(.5, ...s.map(q => q[1])) * 1.08, by = v => H - 1 - v / bmax * ih;
+  const pv = s.filter(q => q[2] > 0), pmin = Math.min(...pv.map(q => q[2])), pmax = Math.max(...pv.map(q => q[2]));
+  const py = v => pmax > pmin ? top + 4 * k + (1 - (v - pmin) / (pmax - pmin)) * (ih - 10 * k) : top + ih / 2;
+  const hv = s.filter(q => q[3] != null), hmax = Math.max(1, ...hv.map(q => q[3])), hmin = Math.min(...hv.map(q => q[3]), hmax);
+  const hy = v => hmax > hmin ? top + 8 * k + (1 - (v - hmin) / (hmax - hmin)) * (ih - 16 * k) : top + ih * .7;
+  // the bag: red pixel columns, faded where the page wasn't watching
+  const cw = Math.max(2, Math.round(3 * k)), gap = Math.max(1, Math.round(k));
+  for (let i = 0; i < s.length; i++) {
+    const a = tx(s[i][0]), b = i + 1 < s.length ? tx(s[i + 1][0]) : W, est = s[i][4], v0 = s[i][1], v1 = i + 1 < s.length ? s[i + 1][1] : v0;
+    for (let xx = Math.floor(a); xx < b; xx += cw + gap) { const f = est && b > a ? (xx - a) / (b - a) : 0, v = est ? v0 + (v1 - v0) * f : v0, yy = by(v);
+      x.globalAlpha = est ? .3 : .85; x.fillStyle = T.red; x.fillRect(xx, yy, cw, H - 1 - yy); }
+  }
+  x.globalAlpha = 1;
+  // holders: muted dots, price: cyan dots
+  const dots = (pts, fy, col, sz) => { x.fillStyle = col; for (let i = 0; i < pts.length; i++) { const xa = tx(pts[i][0]), ya = fy(pts[i]), xb = i + 1 < pts.length ? tx(pts[i + 1][0]) : xa, yb = i + 1 < pts.length ? fy(pts[i + 1]) : ya;
+    const n = Math.max(1, Math.ceil(Math.hypot(xb - xa, yb - ya) / (sz * 2.2))); for (let j = 0; j < n; j++) x.fillRect(Math.round(xa + (xb - xa) * j / n), Math.round(ya + (yb - ya) * j / n), sz, sz); } };
+  if (hv.length > 1) dots(hv.filter(q => !q[4]), q => hy(q[3]), T.muted, Math.max(1, Math.round(1.5 * k)));
+  if (pv.length > 1) dots(pv, q => py(q[2]), T.accent, Math.max(2, Math.round(2 * k)));
+  // markers
+  const mark = (t, col, lab) => { if (!t || t < t0) return; const xx = Math.round(tx(t)); x.fillStyle = col; for (let yy = top; yy < H; yy += 6 * k) x.fillRect(xx, yy, Math.max(1, k), 3 * k); x.font = F(10, 500); const lw = x.measureText(lab).width, lx = Math.min(xx + 5 * k, W - lw - 2 * k); x.fillStyle = "rgba(7,20,22,.85)"; x.fillRect(lx - 3 * k, top + 12 * k, lw + 6 * k, 13 * k); x.fillStyle = col; x.fillText(lab, lx, top + 22 * k); };
+  mark(c.flushAt, T.muted, "flush start");
+  if (c.grade === "CLEAN" && c.cleanAt) mark(c.cleanAt, T.accent, "CLEAN");
+  x.font = F(10); x.fillStyle = T.red; x.fillText("bag " + pct(bmax / 1.08) + " max", 0, 9 * k);
+  x.fillStyle = T.muted; x.textAlign = "right"; x.fillText(dur(t1 - t0) + " · now", W, 9 * k); x.textAlign = "left";
+  x.restore();
+}
+function drawChart(c) {
+  const cv = $("#dchart"); if (!cv) return; const d = devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
+  cv.width = W * d; cv.height = H * d; const x = cv.getContext("2d"); x.scale(d, d); plotChart(x, 0, 0, W, H, c, 1);
+}
+
+// ================= share card =================
+let SHARE = null;
+async function openShare(c) {
+  SHARE = c.mint; holdRender = false;
+  try { await Promise.all([document.fonts.load("700 40px 'JetBrains Mono'"), document.fonts.load("400 20px 'JetBrains Mono'"), document.fonts.load("500 40px 'JetBrains Mono'")]); } catch {}
+  grade(c); drawShare(c);
+  const m = c.m || metrics(c), g = shown(c), link = location.origin + "/?c=" + c.mint;
+  const word = g === "CLEARING" ? "clearing" : g === "SCAN" ? "scanning" : g;
+  const text = `$${c.sym || "?"} on FLUSHED: ${word}.\nSnipers ${pct(m.sn)} · bundles ${pct(m.bu)} · dev ${pct(m.dev)}.`;
+  $("#sPost").href = "https://x.com/intent/post?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(link);
+  $("#shareSym").textContent = "$" + (c.sym || short(c.mint)); $("#sCopy").textContent = "copy image"; $("#sLink").textContent = "copy link";
+  $("#sNote").textContent = "Copy the image and paste it into your post. The link opens this coin's flush report.";
+  $("#shareM").hidden = false;
+}
+function drawShare(c) {
+  const cv = $("#shareCv"), x = cv.getContext("2d"), W = 1600, H = 900, m = c.m || metrics(c), g = shown(c), R = CONFIG.R, F = (n, w) => (w || 400) + " " + n + "px 'JetBrains Mono', monospace";
+  x.setTransform(1, 0, 0, 1, 0, 0); x.imageSmoothingEnabled = false; x.textBaseline = "alphabetic"; x.textAlign = "left";
+  x.fillStyle = T.bg; x.fillRect(0, 0, W, H);
+  x.fillStyle = "rgba(220,244,244,.045)"; for (let yy = 14; yy < H; yy += 26) for (let xx = 14; xx < W; xx += 26) x.fillRect(xx, yy, 2, 2);
+  const left = m.took > .5 ? m.left : 0, lg = TK.OBJECTS.drain({ p: left > 0 ? Math.max(.15, left) : 0, fill: left > 0 ? 0 : 1, drips: left > 0 });
+  TK.draw(x, lg, { theme: T, cell: 3, x: 80, y: 58, shadow: false });
+  x.font = F(30, 700); x.fillStyle = T.ink; x.fillText("flushed", 80 + lg.w * 3 + 20, 58 + 36);
+  x.font = F(20); x.fillStyle = T.muted; x.textAlign = "right"; x.fillText("flush report · " + new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC", W - 80, 58 + 34); x.textAlign = "left";
+  // ticker
+  const sym = "$" + (c.sym || short(c.mint)); let fs = 104; x.font = F(fs, 700); while (x.measureText(sym).width > 860 && fs > 44) { fs -= 4; x.font = F(fs, 700); }
+  x.fillStyle = T.ink; x.fillText(sym, 80, 250);
+  x.font = F(22); x.fillStyle = T.muted; x.fillText([(c.name || "").slice(0, 34), srcTag(c), dur(now() - (c.created || c.born)) + " old"].filter(Boolean).join("  ·  "), 84, 296);
+  // grade
+  const gw = 360, gh = 100, gx = W - 80 - gw, gy = 160, word = g === "CLEARING" ? "CLEARING" : g === "SCAN" ? "SCANNING" : g;
+  if (g === "CLEAN") { x.fillStyle = T.accent; x.shadowColor = T.accent; x.shadowBlur = 34; x.fillRect(gx, gy, gw, gh); x.shadowBlur = 0; x.fillStyle = T.bg; }
+  else { const col = g === "LOADED" ? T.red : g === "CLEARING" ? T.accent : T.ink; x.lineWidth = 4; x.strokeStyle = col; x.strokeRect(gx + 2, gy + 2, gw - 4, gh - 4); x.fillStyle = col; }
+  x.font = F(46, 700); x.textAlign = "center"; x.fillText(word, gx + gw / 2, gy + 66);
+  x.font = F(20); x.fillStyle = T.muted; x.fillText(`${c.pass ?? 0} / 6 checks pass`, gx + gw / 2, gy + gh + 34); x.textAlign = "left";
+  // meter
+  const my = 380; x.font = F(20); x.fillStyle = T.muted; x.fillText("sniper + bundle bag", 80, my - 16);
+  x.textAlign = "right"; x.fillText(m.took > .5 ? `${Math.round((1 - m.left) * 100)}% already sold · ${pct(m.bag)} of supply still held` : "no sniper or bundle bag", W - 80, my - 16); x.textAlign = "left";
+  const n = 40, sw = (W - 160) / n, red = Math.round(left * n);
+  for (let i = 0; i < n; i++) { x.fillStyle = i < red ? T.red : T.accent; x.globalAlpha = i < red ? 1 : .85; x.fillRect(Math.round(80 + i * sw), my, Math.round(sw - 6), 56); }
+  x.globalAlpha = 1;
+  // numbers
+  const sy = 520, stat = (lab, val, ok, xx) => { x.font = F(20); x.fillStyle = T.muted; x.fillText(lab, xx, sy); x.font = F(58, 500); x.fillStyle = ok == null ? T.ink : ok ? T.accent : T.red; x.fillText(val, xx, sy + 64); };
+  stat("snipers", pct(m.sn), m.sn < R.snipers, 80); stat("bundles", pct(m.bu), m.bu < R.bundles, 330); stat("dev", pct(m.dev), m.dev < R.dev, 580);
+  plotChart(x, 80, 640, 700, 150, c, 1.6);
+  // checks
+  (c.checks || []).forEach((ck, i) => { const yy = 516 + i * 48; x.font = F(24, 700); x.fillStyle = ck.ok ? T.accent : T.red; x.fillText(ck.ok ? "✓" : "✗", 880, yy);
+    x.font = F(22, 500); x.fillStyle = T.ink; x.fillText(ck.name, 920, yy); const room = W - 80 - (920 + x.measureText(ck.name).width + 28);
+    x.font = F(17); x.fillStyle = T.muted; x.textAlign = "right"; let v = ck.v; while (x.measureText(v).width > room && v.length > 4) v = v.slice(0, -2); if (v !== ck.v) v = v.trim() + "…";
+    if (room > 60) x.fillText(v, W - 80, yy); x.textAlign = "left"; });
+  // footer
+  x.fillStyle = T.line; x.fillRect(80, 828, W - 160, 1);
+  x.font = F(20); x.fillStyle = T.muted; x.fillText("checked by FLUSHED · " + (CONFIG.site || location.host), 80, 866);
+  x.textAlign = "right"; x.fillText("not financial advice", W - 80, 866); x.textAlign = "left";
+}
+const shareBlob = () => new Promise(r => $("#shareCv").toBlob(r, "image/png"));
+$("#sCopy").onclick = async () => { try { const b = await shareBlob(); await navigator.clipboard.write([new ClipboardItem({ "image/png": b })]); $("#sCopy").textContent = "copied ✓"; } catch { $("#sNote").textContent = "This browser can't copy images. Use download instead."; } };
+$("#sDl").onclick = async () => { const c = COINS.get(SHARE), b = await shareBlob(), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "flushed-" + String((c && c.sym) || "coin").toLowerCase().replace(/[^a-z0-9]+/g, "") + ".png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000); };
+$("#sLink").onclick = () => navigator.clipboard.writeText(location.origin + "/?c=" + SHARE).then(() => $("#sLink").textContent = "copied ✓").catch(() => {});
+const closeShare = () => { $("#shareM").hidden = true; SHARE = null; };
+$("#shareX").onclick = closeShare; $("#shareM").onclick = e => { if (e.target.id === "shareM") closeShare(); };
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#shareM").hidden) closeShare(); });
+
+// ================= alerts when a coin turns CLEAN =================
+const AL = Object.assign({ sound: false, notify: false }, ls.get("flushed.alerts", {})), PENDING = [], SIGS = [];
+let AC = null;
+function queueAlert(c) { PENDING.push({ mint: c.mint, at: now() }); }
+function processAlerts() {
+  for (let i = PENDING.length - 1; i >= 0; i--) {
+    const e = PENDING[i], c = COINS.get(e.mint);
+    if (!c) { PENDING.splice(i, 1); continue; }
+    if (GATE.on && !GATE.holder && now() - e.at < CONFIG.earlySeconds * 1000) continue;   // holders first
+    PENDING.splice(i, 1); if (c.grade === "CLEAN") fireAlert(c, e.at);
+  }
+}
+function beep() {
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime;
+    [[784, 0], [1175, .1]].forEach(([f, d]) => { const o = AC.createOscillator(), gn = AC.createGain(); o.type = "square"; o.frequency.value = f;
+      gn.gain.setValueAtTime(.0001, t + d); gn.gain.exponentialRampToValueAtTime(.05, t + d + .01); gn.gain.exponentialRampToValueAtTime(.0001, t + d + .09);
+      o.connect(gn).connect(AC.destination); o.start(t + d); o.stop(t + d + .1); }); } catch {}
+}
+function fireAlert(c, at) {
+  const m = c.m || metrics(c), early = GATE.on && GATE.holder ? " · you saw it first" : "";
+  SIGS.unshift({ mint: c.mint, sym: c.sym, at }); if (SIGS.length > 8) SIGS.length = 8; renderSigs();
+  const el = document.createElement("div"); el.className = "toast";
+  el.innerHTML = `<i class="gr CLEAN">CLEAN</i><div><b>$${esc(c.sym || short(c.mint))}</b> just turned CLEAN${PREVIEW ? " (preview)" : ""}<br><small>snipers ${pct(m.sn)} · bundles ${pct(m.bu)} · dev ${pct(m.dev)}${early}</small></div><button data-open="${c.mint}">open</button>`;
+  const box = $("#toasts"); box.prepend(el); while (box.children.length > 3) box.lastChild.remove();
+  setTimeout(() => el.remove(), 9000);
+  if (AL.sound) beep();
+  if (AL.notify && document.hidden && "Notification" in window && Notification.permission === "granted") {
+    try { const n = new Notification(`$${c.sym} just turned CLEAN`, { body: `Snipers ${pct(m.sn)} · bundles ${pct(m.bu)} · dev ${pct(m.dev)}`, icon: "/fav.png", tag: c.mint });
+      n.onclick = () => { window.focus(); openCoin(c); n.close(); }; } catch {}
+  }
+}
+function renderSigs() {
+  $("#sigs").innerHTML = "<b>signals</b>" + (SIGS.length ? SIGS.map(s => `<button data-open="${s.mint}">${hm(s.at)} <span>$${esc(s.sym || "?")}</span> CLEAN</button>`).join("")
+    : "<span>no coin has turned CLEAN since you opened the page. the next one shows up here.</span>");
+}
+function renderToggles() {
+  $("#tSound").textContent = "sound " + (AL.sound ? "on" : "off"); $("#tSound").classList.toggle("on", AL.sound);
+  $("#tNotify").textContent = "alerts " + (AL.notify ? "on" : "off"); $("#tNotify").classList.toggle("on", AL.notify);
+}
+$("#tSound").onclick = () => { AL.sound = !AL.sound; ls.set("flushed.alerts", AL); if (AL.sound) beep(); renderToggles(); };
+$("#tNotify").onclick = async () => {
+  if (AL.notify) AL.notify = false;
+  else if (!("Notification" in window)) { $("#tNotify").textContent = "alerts n/a"; return; }
+  else { try { AL.notify = (await Notification.requestPermission()) === "granted"; } catch { AL.notify = false; } }
+  ls.set("flushed.alerts", AL); renderToggles();
+};
+const openFrom = e => { const b = e.target.closest("[data-open]"); if (!b) return; const c = COINS.get(b.dataset.open); if (c) openCoin(c); };
+$("#sigs").onclick = openFrom; $("#toasts").onclick = openFrom;
+renderSigs(); renderToggles();
 
 // ================= page chrome =================
 if (CONFIG.ca) { $("#ca").textContent = CONFIG.ca; $("#copy").hidden = false; $("#cafoot").textContent = "ca " + CONFIG.ca;
@@ -1381,10 +1620,12 @@ if (!reduce) setInterval(() => heroFrame(), 120);
 $("#filters").onclick = e => { const b = e.target.closest("[data-f]"); if (!b) return; filter = b.dataset.f; $$("#filters .chip").forEach(x => x.classList.toggle("on", x === b)); dirty = true; render(); };
 $("#rows").onclick = e => {
   const v = e.target.closest("[data-verify]"); if (v) { const c = COINS.get(v.dataset.verify); if (c && !c.verifying && !PREVIEW) verifyBags(c); return; }
+  const sh = e.target.closest("[data-share]"); if (sh) { const c = COINS.get(sh.dataset.share); if (c) openShare(c); return; }
+  const un = e.target.closest("[data-unpin]"); if (un) { e.stopPropagation(); const c = COINS.get(un.dataset.unpin); if (c) { c.pinned = false; if (openMint === c.mint) { openMint = null; setUrl(null); } } dirty = true; render(); return; }
   if (e.target.closest(".drawer")) return;
-  const r = e.target.closest(".brow[data-m]"); if (!r) return; openMint = openMint === r.dataset.m ? null : r.dataset.m; dirty = true; render();
+  const r = e.target.closest(".brow[data-m]"); if (!r) return; openMint = openMint === r.dataset.m ? null : r.dataset.m; setUrl(openMint); dirty = true; render();
 };
-$("#logT").onclick = e => { const a = e.target.closest("[data-open]"); if (!a) return; const m = a.dataset.open; if (COINS.has(m)) { openMint = m; filter = "all"; $$("#filters .chip").forEach(x => x.classList.toggle("on", x.dataset.f === "all")); dirty = true; render(); } };
+$("#logT").onclick = e => { const a = e.target.closest("[data-open]"); if (!a) return; e.preventDefault(); const c = COINS.get(a.dataset.open); if (c) openCoin(c); else checkCoin(a.dataset.open); };
 
 // how: scroll-driven illustration of one coin's flush
 function howP() { const s = $("#how"), r = s.getBoundingClientRect(), span = r.height - innerHeight; return innerWidth <= 860 ? 1 : span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1; }
@@ -1452,11 +1693,13 @@ addEventListener("scroll", () => { $("#top").classList.toggle("solid", scrollY >
 
 // ================= go =================
 renderGate(); renderEngine();
-setInterval(() => { dirty = true; render(); }, 1000);
+setInterval(() => { dirty = true; processAlerts(); render(); }, 1000);
+const DEEP = Q.get("c");
 if (PREVIEW) startPreview();
 else {
   startPumpPortal();
-  refresh().then(backfill);
+  if (DEEP) { $("#chkIn").value = DEEP; $("#chkHint").textContent = "reading its first blocks…"; }
+  refresh().then(() => { if (DEEP) checkCoin(DEEP); return backfill(); });
   setInterval(refresh, 20000); setInterval(labPoll, 6000); setInterval(snapLoop, 8000); setInterval(prune, 30000);
   engineInit();
   // if nothing at all can be reached, say so and show sample data, clearly labeled

@@ -9,6 +9,7 @@ En sida, `index.html`, med CSS och JS inbakade. `og.png` och `fav.png` ligger br
 |---|---|
 | `ca` | $FLUSHED-minten. Tom = "posted here and on X at launch". Ifylld = köpknapparna går till pump.fun och holders får CLEAN 20 sekunder före alla andra. |
 | `x` | X-länken (förifylld: https://x.com/FlushedEngine) |
+| `site` | Domänen som står på delningskorten, t.ex. `flushedengine.fun`. Tom = adressen sajten ligger på |
 | `engine` | Motorns publika plånbok. Tom = "posted here at launch". Ifylld = live-flöde av motorns köp och sälj, träffprocent och netto räknat från kedjan. |
 | `earlySeconds` | Hur många sekunder före andra som holders ser CLEAN (20) |
 | `R` | Gränserna: snipers 2 %, bundles 3 %, dev 3 %, max dip 50 %, 8 plånböcker, LOADED över 10 %, 2x och −25 % |
@@ -24,6 +25,14 @@ GitHub → Vercel. Framework: **Other**, ingen build, root = mappen där `index.
 - **Live-data:** inom ungefär en minut fylls tavlan med coins och lamporna blir gröna. Klicka på en coin för sniper-kartan och checklistan.
 - **Exempeldata:** lägg till `?preview` i adressen. Allt märks då "preview · sample data".
 - **Felsökning:** `?debug` visar status för varje datakälla.
+
+## Funktioner
+
+- **Kolla valfri coin:** klistra in en CA (eller en pump.fun-länk) högst upp. Coinen fästs överst på tavlan med sin rapport öppen.
+- **Länk till en coin:** `?c=<mint>` öppnar den coinens rapport direkt. Det är länken som delningskortet och X-knappen använder.
+- **Delningskort:** knappen "share card ↗" i en coins rapport ger en bild på 1600×900 med mätare, %, de sex checkarna och flush-grafen. Man kan kopiera bilden, ladda ner den som PNG, posta på X (med text och länk) eller kopiera länken.
+- **Flush-graf:** påsen (rött), priset och antalet holders över tid, med markering för flushens start och CLEAN. För coins som redan var igång när sidan öppnades är tiden innan dess tonad.
+- **Live-larm:** varje coin som blir CLEAN medan sidan är öppen syns i en remsa och som en notis. Ljud och webbläsarnotis slås på uppe till höger på tavlan. Holders får larmet 20 s tidigare.
 
 ## Datakällor (alla gratis, inga nycklar)
 
