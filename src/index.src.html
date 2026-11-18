@@ -219,7 +219,7 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
 /* share modal */
 .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:20px}
 .modal[hidden]{display:none!important}
-.modal .box{background:var(--paper);border:1.5px solid var(--line);box-shadow:10px 10px 0 var(--shadow);width:min(880px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:20px}
+.modal .box{background:var(--paper);border:1.5px solid var(--line);box-shadow:10px 10px 0 var(--shadow);width:min(880px,100%);max-height:calc(100vh - 40px);overflow-y:auto;overflow-x:hidden;padding:20px}
 .modal .mh{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:12px;color:var(--muted)} .modal .mh button{margin-left:auto;background:none;border:0;color:var(--muted);font:20px var(--mono);cursor:pointer;line-height:1}
 .modal canvas{display:block;width:100%;height:auto;border:1px solid var(--hair)}
 .modal .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
@@ -1012,10 +1012,10 @@ function renderGate() {
 // ================= check any coin + links to a coin =================
 const srcTag = c => c.src === "pump" ? "pump" : c.lp || "lab";
 function setUrl(mint) { try { history.replaceState(null, "", mint ? "?c=" + mint : location.pathname); } catch {} }
-function openCoin(c, noScroll) {
+function openCoin(c, noScroll, instant) {
   openMint = c.mint; filter = "all"; $$("#filters .chip").forEach(x => x.classList.toggle("on", x.dataset.f === "all"));
   setUrl(c.mint); dirty = true; holdRender = false; render();
-  if (!noScroll) setTimeout(() => { const r = $(".brow.open"); if (r) scrollTo({ top: r.getBoundingClientRect().top + scrollY - 76, behavior: reduce ? "auto" : "smooth" }); }, 60);
+  if (!noScroll) setTimeout(() => { const r = $(".brow.open"); if (r) scrollTo({ top: r.getBoundingClientRect().top + scrollY - 76, behavior: reduce || instant ? "auto" : "smooth" }); }, 60);
 }
 async function checkCoin(raw) {
   const hint = $("#chkHint"), mint = (String(raw || "").match(/[1-9A-HJ-NP-Za-km-z]{32,44}/g) || [])[0];
@@ -1035,7 +1035,7 @@ async function checkCoin(raw) {
     await earlyScan(c);
     for (let i = 0; i < 40 && !c.early && !c.dead; i++) await new Promise(r => setTimeout(r, 500));
     if (!c.early) { hint.textContent = "no trades found for that coin yet. try again in a minute."; hint.className = "hint err"; c.pinned = false; c.dead = true; return; }
-    hint.textContent = ""; openCoin(c);
+    hint.textContent = ""; openCoin(c, false, raw === DEEP);
   } catch (e) { hint.textContent = "couldn't reach the data right now. try again in a few seconds."; hint.className = "hint err"; }
 }
 $("#chkForm").onsubmit = e => { e.preventDefault(); checkCoin($("#chkIn").value); };
