@@ -15,6 +15,7 @@ const TK = (() => {
     night: { bg:"#0a0e16", shadow:"#05070b", ink:"#e8edf6", muted:"#6a7489", accent:"#eef3fb", red:"#ff4655", card:"#10151f", line:"#29324a",
       outline:"#04060a", body:"#c9d2e0", hi:"#e9eef6", shade:"#99a5b8", dark:"#6d7a8f", screen:"#0e1420", glare:"#1a2232", glow:"#eef3fb", glow2:"#a9b5c8", led:"#eef3fb", red2:"#b8222f", slot:"#3a4560", glowBlur:.45 },
   };
+  THEMES.drainInv = Object.assign({}, THEMES.drain, { bg: "#3fd6e0", shadow: "#2bb3bd", glow: "#071416", glow2: "#0d2a2e", led: "#071416", glowBlur: 0, outline: "#04100f" });
 
   // 3x5 pixel font (M, N, W wider). Rows top to bottom.
   const FONT = {
@@ -144,6 +145,20 @@ const TK = (() => {
       return g;
     },
 
+    // ---- FLUSHED F: the monogram. top bar = supply, middle bar = the sniper bag, draining out ----
+    fmono({ p = .45, fill = 0, drips = p > 0 } = {}) {
+      const g = Grid(32, 46);
+      g.rect(3, 2, 8, 34, "glow"); g.rect(10, 2, 1, 34, "glow2");
+      g.rect(3, 2, 26, 8, "glow"); for (let x = 14; x < 29; x += 5) g.rect(x, 2, 1, 8, "glow2"); g.rect(3, 9, 26, 1, "glow2");
+      g.rect(11, 16, 13, 7, "screen");
+      const rh = p > 0 ? Math.max(1, Math.round(7 * p)) : 0; if (rh) { g.rect(11, 23 - rh, 13, rh, "red"); g.rect(11, 22, 13, 1, "red2"); }
+      const fh = Math.round(7 * fill); if (fh) { g.rect(11, 23 - fh, 13, fh, "glow"); g.rect(11, 22, 13, 1, "glow2"); }
+      if (drips) { g.rect(16, 23, 3, 3, "red"); g.rect(18, 23, 1, 3, "red2"); }
+      g.outline();
+      if (drips) { g.rect(17, 29, 2, 3, "red"); g.rect(17, 36, 2, 2, "red"); g.set(17, 42, "red"); }
+      return g;
+    },
+
     // ---- FLUSHED B: a vertical supply column. Clean stacks on top, the red layer drains out the spout below ----
     column({ p = .5 } = {}) {
       const W = 30, H = 46, g = Grid(W, H);
@@ -244,6 +259,15 @@ const TK = (() => {
     el.prepend(c); const ctx = c.getContext("2d"); ctx.scale(d, d); ctx.imageSmoothingEnabled = false; return ctx;
   }
 
-  return { THEMES, FONT, OBJECTS, Grid, draw, led, canvasFor, textWidth };
+  function bbox(g) { let x0 = g.w, y0 = g.h, x1 = -1, y1 = -1;
+    for (let y = 0; y < g.h; y++) for (let x = 0; x < g.w; x++) if (g.get(x, y)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    return { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 }; }
+  // the X-avatar tile: a cyan circle with the dark F, centred on its body
+  function tile(ctx, size, o = {}) {
+    const th = THEMES.drainInv, g = OBJECTS.fmono({ drips: false }), b = bbox(g), cell = Math.max(1, Math.floor(size * (o.frac || .62) / b.h));
+    ctx.save(); ctx.fillStyle = th.bg; ctx.beginPath(); ctx.arc((o.x || 0) + size / 2, (o.y || 0) + size / 2, size / 2, 0, Math.PI * 2); ctx.fill(); ctx.clip();
+    draw(ctx, g, { theme: th, cell, x: (o.x || 0) + Math.round(size / 2 - (b.x + b.w / 2) * cell), y: (o.y || 0) + Math.round(size / 2 - (b.y + b.h / 2) * cell), shadow: false });
+    ctx.restore(); }
+  return { THEMES, FONT, OBJECTS, Grid, draw, led, canvasFor, textWidth, bbox, tile };
 })();
 if (typeof module !== "undefined") module.exports = TK;
