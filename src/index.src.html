@@ -172,7 +172,7 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
   .brow{grid-template-columns:minmax(120px,1.3fr) 64px 64px 54px minmax(110px,1.3fr) 108px} .brow .c-age,.brow .c-hold,.brow .c-mcap{display:none}
 }
 @media (max-width:860px){
-  .hero3{padding:34px 0 20px} .hero3 .wrap{grid-template-columns:1fr} .hero3 .vis{height:200px;order:-1}
+  .hero3{padding:34px 0 20px} .hero3 .wrap{grid-template-columns:minmax(0,1fr)} .hero3 .vis{height:200px;order:-1}
   .top .live{display:none} .top .btn{margin-left:auto}
   .brow{grid-template-columns:1fr 92px;grid-template-areas:"sym gr" "mt mt" "nums nums";gap:8px 12px;padding:12px 14px;min-height:0}
   .brow.h{display:none} .brow .c-sym{grid-area:sym} .brow .c-gr{grid-area:gr} .brow .c-mt{grid-area:mt}
@@ -403,7 +403,7 @@ footer.f3 .fine{display:flex;gap:24px;flex-wrap:wrap;margin-top:60px;font-size:1
 <script>
 // ================= CONFIG =================
 const CONFIG = {
-  ca: "",                                   // $FLUSHED mint. empty = "posted here and on X at launch", holder head start off
+  ca: "CGHu2zGKRpsZsHP1kANE9gWV2kMy5ai3NWfpvoxHpump", // $FLUSHED mint. empty = "posted here and on X at launch", holder head start off
   x: "https://x.com/FlushedEngine",
   site: "",                                 // the domain on share cards, e.g. "flushedengine.fun". empty = the address the site is on
   engine: "",                               // the engine's public wallet. empty = "posted here at launch"
